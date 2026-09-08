@@ -11,67 +11,84 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+// ==========================
+// ENTITE UTILISATEUR
+// ==========================
+
+// Cette classe représente un utilisateur enregistré en base de donnée
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+
+// L'adresse email doit être unique
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(
+    fields: ['email'],
+    message: 'There is already an account with this email'
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    // Id unique générer automatiquement par doctrine
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    // Email utilisé comme identifiant de connexion
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
+    // Rôles utilisés par le système de sécurité Symfony
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+    // Le mot de passe stocké ici est le mot de passe hashé
     #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
     private ?string $pseudo = null;
 
+    // Seul le nom du fichier de la photo est enregistré en BDD
     #[ORM\Column(length: 255)]
     private ?string $photo = null;
 
+    // La biographie est facultative
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $biographie = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $dateInscription = null;
 
-    /**
-     * @var Collection<int, Publication>
-     */
+
+    // ==========================
+    // RELATIONS
+    // ==========================
+
+    // Un utilisateur peut avoir plusieur publications
+    // Chaque publication possède un auteur
     #[ORM\OneToMany(targetEntity: Publication::class, mappedBy: 'auteur')]
     private Collection $publications;
 
-    /**
-     * @var Collection<int, DemandeAmitie>
-     */
+    // Demande d'amitié envoyée par cet utilisateur
     #[ORM\OneToMany(targetEntity: DemandeAmitie::class, mappedBy: 'demandeur')]
     private Collection $demandesEnvoyees;
 
-    /**
-     * @var Collection<int, DemandeAmitie>
-     */
+    // Demande d'amitié recues par cet utilisateur
     #[ORM\OneToMany(targetEntity: DemandeAmitie::class, mappedBy: 'destinataire')]
     private Collection $demandesRecues;
 
+
     public function __construct()
     {
+        // Initialisation des relations contenant plusieurs objets
         $this->publications = new ArrayCollection();
         $this->demandesEnvoyees = new ArrayCollection();
         $this->demandesRecues = new ArrayCollection();
     }
+
+
+    // ==========================
+    // GETTERS / SETTERS
+    // ==========================
 
     public function getId(): ?int
     {
@@ -90,31 +107,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
+
+    // ==========================
+    // SECURITE
+    // ==========================
+
+    // L'email est utilisé comme identifiant unique de connexion
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+
+        // Tous les utilisateurs possèdent au minimum ROLE_USER
         $roles[] = 'ROLE_USER';
 
+        // Évite d'avoir plusieurs fois le même rôle
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -122,9 +136,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -138,21 +149,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
+     * Gestion interne de sécurité générée par Symfony.
+     * Évite de conserver directement le hash du mot de passe dans la session
      */
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
 
         return $data;
     }
 
     #[\Deprecated]
-    public function eraseCredentials(): void
-    {
-        // @deprecated, to be removed when upgrading to Symfony 8
-    }
+    public function eraseCredentials(): void {}
+
+
+    // ==========================
+    // INFORMATIONS DU PROFIL
+    // ==========================
 
     public function getPseudo(): ?string
     {
@@ -202,9 +216,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Publication>
-     */
+
+    // ==========================
+    // PUBLICATIONS
+    // ==========================
+
     public function getPublications(): Collection
     {
         return $this->publications;
@@ -212,8 +228,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addPublication(Publication $publication): static
     {
+        // On évite d'ajouter deux fois la meme publication
         if (!$this->publications->contains($publication)) {
             $this->publications->add($publication);
+
+            // Mise a jour également du coté Publication
             $publication->setAuteur($this);
         }
 
@@ -223,7 +242,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePublication(Publication $publication): static
     {
         if ($this->publications->removeElement($publication)) {
-            // set the owning side to null (unless already changed)
+
+            // Mise a jour également du coté Publication
             if ($publication->getAuteur() === $this) {
                 $publication->setAuteur(null);
             }
@@ -232,28 +252,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, DemandeAmitie>
-     */
+
+    // ==========================
+    // DEMANDES D'AMITIE ENVOYES
+    // ==========================
+
     public function getDemandesEnvoyees(): Collection
     {
         return $this->demandesEnvoyees;
     }
 
-    public function addDemandesEnvoyee(DemandeAmitie $demandesEnvoyee): static
-    {
+    public function addDemandesEnvoyee(
+        DemandeAmitie $demandesEnvoyee
+    ): static {
         if (!$this->demandesEnvoyees->contains($demandesEnvoyee)) {
             $this->demandesEnvoyees->add($demandesEnvoyee);
+
+            // Cet utilisateur devient le demandeur
             $demandesEnvoyee->setDemandeur($this);
         }
 
         return $this;
     }
 
-    public function removeDemandesEnvoyee(DemandeAmitie $demandesEnvoyee): static
-    {
+    public function removeDemandesEnvoyee(
+        DemandeAmitie $demandesEnvoyee
+    ): static {
         if ($this->demandesEnvoyees->removeElement($demandesEnvoyee)) {
-            // set the owning side to null (unless already changed)
             if ($demandesEnvoyee->getDemandeur() === $this) {
                 $demandesEnvoyee->setDemandeur(null);
             }
@@ -262,28 +287,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, DemandeAmitie>
-     */
+
+    // ==========================
+    // DEMANDES D'AMITIE RECUES
+    // ==========================
+
     public function getDemandesRecues(): Collection
     {
         return $this->demandesRecues;
     }
 
-    public function addDemandesRecue(DemandeAmitie $demandesRecue): static
-    {
+    public function addDemandesRecue(
+        DemandeAmitie $demandesRecue
+    ): static {
         if (!$this->demandesRecues->contains($demandesRecue)) {
             $this->demandesRecues->add($demandesRecue);
+
+            // Cet utilisateur devient le destinataire
             $demandesRecue->setDestinataire($this);
         }
 
         return $this;
     }
 
-    public function removeDemandesRecue(DemandeAmitie $demandesRecue): static
-    {
+    public function removeDemandesRecue(
+        DemandeAmitie $demandesRecue
+    ): static {
         if ($this->demandesRecues->removeElement($demandesRecue)) {
-            // set the owning side to null (unless already changed)
             if ($demandesRecue->getDestinataire() === $this) {
                 $demandesRecue->setDestinataire(null);
             }
