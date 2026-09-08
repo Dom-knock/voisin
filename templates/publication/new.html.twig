@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Publication
+{% endblock %}
+
+{% block body %}
+	<h1>Créer une nouvelle publication</h1>
+
+	{{ include('publication/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+
+	<a href="{{ path('app_publication_index') }}">
+		Retour à la liste
+	</a>
+{% endblock %}

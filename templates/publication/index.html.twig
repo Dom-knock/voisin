@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Publication index
+{% endblock %}
+
+{% block body %}
+
+	<h1>Publications</h1>
+
+	<p>
+		<a class="bouton" href="{{ path('app_publication_new') }}">
+			Créer une publication
+		</a>
+	</p>
+
+	{% for publication in publications %}
+
+		<article class="publication">
+
+			<h2>
+				{{ publication.auteur.pseudo }}
+			</h2>
+
+			<p>
+				{{ publication.texte }}
+			</p>
+
+			{% if publication.image %}
+
+				<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de la publication" class="image-publication">
+
+			{% endif %}
+
+			<p>
+				{{ publication.visibilite|capitalize }}
+				•
+				{{ publication.datePublication|date('d/m/Y à H:i') }}
+			</p>
+
+			<p>
+				<a href="{{ path('app_publication_show', {'id': publication.id}) }}">
+					Voir
+				</a>
+
+				{% if app.user == publication.auteur %}
+
+					|
+					<a href="{{ path('app_publication_edit', {'id': publication.id}) }}">
+						Modifier
+					</a>
+
+				{% endif %}
+			</p>
+
+		</article>
+
+	{% else %}
+
+		<p>Aucune publication.</p>
+
+	{% endfor %}
+
+{% endblock %}

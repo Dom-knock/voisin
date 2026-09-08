@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fil d'actualité
+{% endblock %}
+
+{% block body %}
+
+	<h1>Fil d'actualité</h1>
+
+	<nav>
+		<a href="{{ path('app_fil_actualite') }}">
+			Toutes
+		</a>
+
+		<a href="{{ path('app_fil_actualite', {'filtre': 'publiques'}) }}">
+			Publiques uniquement
+		</a>
+
+		<a href="{{ path('app_fil_actualite', {'filtre': 'amis'}) }}">
+			Amis uniquement
+		</a>
+	</nav>
+
+	{% for publication in publications %}
+
+		<article class="publication">
+
+			<h2>{{ publication.auteur.pseudo }}</h2>
+
+			<p>{{ publication.texte }}</p>
+
+			{% if publication.image %}
+				<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de publication" class="image-publication">
+			{% endif %}
+
+			<p>
+				Publié le
+				{{ publication.datePublication|date('d/m/Y à H:i') }}
+			</p>
+
+		</article>
+
+	{% else %}
+
+		<p>Aucune publication visible.</p>
+
+	{% endfor %}
+
+{% endblock %}

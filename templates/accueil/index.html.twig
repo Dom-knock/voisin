@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil
+{% endblock %}
+
+{% block body %}
+
+	<h1>Bienvenue sur Voisin.</h1>
+
+	<p>Un réseau social centré sur l'authenticité et les liens humains.</p>
+
+	<section>
+		<h2>Publications récentes</h2>
+
+		{% if publications is empty %}
+
+			<p>Aucune publication pour le moment.</p>
+
+		{% else %}
+
+			{% for publication in publications %}
+
+				<article>
+
+					<h3>
+						<a href="{{ path('app_profil', {'id': publication.auteur.id}) }}">
+							{{ publication.auteur.pseudo }}
+						</a>
+					</h3>
+
+					<p>{{ publication.texte }}</p>
+
+					{% if publication.image %}
+						<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de la publication" width="300">
+					{% endif %}
+
+					<p>
+						Publié le
+						{{ publication.datePublication|date('d/m/Y à H:i') }}
+					</p>
+
+				</article>
+
+			{% endfor %}
+
+		{% endif %}
+	</section>
+
+{% endblock %}

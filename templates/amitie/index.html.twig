@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Amis
+{% endblock %}
+
+{% block body %}
+
+	<h1>Mes demandes d'amitié reçues</h1>
+
+	{% if demandesRecues is empty %}
+
+		<p>Aucune demande d'amitié en attente.</p>
+
+	{% else %}
+
+		{% for demande in demandesRecues %}
+
+			<article class="utilisateur">
+
+				<h2>{{ demande.demandeur.pseudo }}</h2>
+
+				{% if demande.demandeur.photo %}
+					<img src="{{ asset('uploads/profils/' ~ demande.demandeur.photo) }}" alt="Photo de profil" class="photo-utilisateur">
+				{% endif %}
+
+				<p>
+					Demande envoyée le
+					{{ demande.dateDemande|date('d/m/Y à H:i') }}
+				</p>
+
+				<a class="bouton" href="{{ path('app_amis_accepter', {'id': demande.id}) }}">
+					Accepter
+				</a>
+
+				<a class="bouton bouton-danger" href="{{ path('app_amis_refuser', {'id': demande.id}) }}">
+					Refuser
+				</a>
+
+			</article>
+
+		{% endfor %}
+
+	{% endif %}
+
+	<h2>Mes amis</h2>
+
+	{% if amis is empty %}
+
+		<p>Vous n'avez pas encore d'amis.</p>
+
+	{% else %}
+
+		{% for ami in amis %}
+
+			<article article class="utilisateur">
+
+				<h2>{{ ami.pseudo }}</h2>
+
+				{% if ami.photo %}
+					<img src="{{ asset('uploads/profils/' ~ ami.photo) }}" alt="Photo de profil" class="photo-utilisateur">
+				{% endif %}
+
+				{% if ami.biographie %}
+					<p>{{ ami.biographie }}</p>
+				{% endif %}
+
+			</article>
+
+		{% endfor %}
+
+	{% endif %}
+
+	<h2>Utilisateurs</h2>
+
+	{% for utilisateur in utilisateurs %}
+
+		{% if utilisateur.id != utilisateurConnecte.id
+    and utilisateur.id not in idsAmis
+    and utilisateur.id not in idsDemandesEnAttente %}
+
+			<article class="utilisateur">
+
+				<h3>{{ utilisateur.pseudo }}</h3>
+
+				{% if utilisateur.photo %}
+					<img src="{{ asset('uploads/profils/' ~ utilisateur.photo) }}" alt="Photo de {{ utilisateur.pseudo }}" class="photo-utilisateur">
+				{% endif %}
+
+				{% if utilisateur.biographie %}
+					<p>{{ utilisateur.biographie }}</p>
+				{% endif %}
+
+				<p>
+					<a class="bouton" href="{{ path('app_amis_ajouter', {'id': utilisateur.id}) }}">
+						Ajouter en ami
+					</a>
+				</p>
+
+			</article>
+		{% endif %}
+
+	{% endfor %}
+
+{% endblock %}

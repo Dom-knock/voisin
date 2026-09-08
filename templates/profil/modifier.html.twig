@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil
+{% endblock %}
+
+{% block body %}
+
+	<h1>Modifier mon profil</h1>
+
+	{{ form_start(form) }}
+
+	{{ form_row(form.pseudo) }}
+
+	{{ form_row(form.photo) }}
+
+	{{ form_row(form.biographie) }}
+
+	<button type="submit">
+		Enregistrer
+	</button>
+
+	{{ form_end(form) }}
+
+	<a href="{{ path('app_profil', {'id': app.user.id}) }}">
+		Retour à mon profil
+	</a>
+
+{% endblock %}

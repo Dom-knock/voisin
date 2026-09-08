@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil de
+	{{ utilisateur.pseudo }}
+{% endblock %}
+
+{% block body %}
+
+	<section class="profil">
+		<h1>{{ utilisateur.pseudo }}</h1>
+
+		{% if utilisateur.photo %}
+			<img src="{{ asset('uploads/profils/' ~ utilisateur.photo) }}" alt="Photo de profil" class="photo-profil">
+		{% endif %}
+
+		{% if utilisateur.biographie %}
+			<p>{{ utilisateur.biographie }}</p>
+		{% endif %}
+
+		<p>
+			Inscrit depuis le
+			{{ utilisateur.dateInscription|date('d/m/Y') }}
+		</p>
+
+		{% if app.user == utilisateur %}
+			<p>
+				<a class="bouton" href="{{ path('app_profil_modifier') }}">
+					Modifier mon profil
+				</a>
+			</p>
+		{% endif %}
+	</section>
+	<h2>Amis</h2>
+
+	{% for ami in amis %}
+
+		<p>
+			<a href="{{ path('app_profil', {'id': ami.id}) }}">
+				{{ ami.pseudo }}
+			</a>
+		</p>
+
+	{% else %}
+
+		<p>Aucun ami.</p>
+
+	{% endfor %}
+
+	<h2>Publications</h2>
+
+	{% for publication in publications %}
+
+		<article class="publication">
+
+			<p>{{ publication.texte }}</p>
+
+			{% if publication.image %}
+				<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de publication" class="image-publication">
+			{% endif %}
+
+			<p>
+				Publié le
+				{{ publication.datePublication|date('d/m/Y à H:i') }}
+			</p>
+
+		</article>
+
+	{% else %}
+
+		<p>Aucune publication.</p>
+
+	{% endfor %}
+
+{% endblock %}
