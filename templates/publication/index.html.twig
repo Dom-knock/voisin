@@ -1,22 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Publication index
+{% block title %}
+	Publications
 {% endblock %}
 
 {% block body %}
 
 	<h1>Publications</h1>
 
+	{# Accès au formulaire permettant de créer une nouvelle publication #}
 	<p>
 		<a class="bouton" href="{{ path('app_publication_new') }}">
 			Créer une publication
 		</a>
 	</p>
 
+	{# Parcours des publications envoyées par le controleur #}
 	{% for publication in publications %}
 
-		<article class="publication">
+		<article
+			class="publication">
 
+			{# Accès au pseudo grâce à la relation publication -> user #}
 			<h2>
 				{{ publication.auteur.pseudo }}
 			</h2>
@@ -25,6 +30,7 @@
 				{{ publication.texte }}
 			</p>
 
+			{# L'image est affichée uniquement si la publication en possède une #}
 			{% if publication.image %}
 
 				<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de la publication" class="image-publication">
@@ -32,16 +38,21 @@
 			{% endif %}
 
 			<p>
+				{# capitalize met la première lettre de la visibilité en majuscule #}
 				{{ publication.visibilite|capitalize }}
-				•
+
+				<br>
+
 				{{ publication.datePublication|date('d/m/Y à H:i') }}
 			</p>
 
 			<p>
+				{# L'id permet d'accéder à la publication sélectionnée #}
 				<a href="{{ path('app_publication_show', {'id': publication.id}) }}">
 					Voir
 				</a>
 
+				{# Seul l'auteur voit le lien permettant de modifier sa publication #}
 				{% if app.user == publication.auteur %}
 
 					|

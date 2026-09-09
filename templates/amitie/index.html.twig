@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Amis
+{% block title %}
+	Amis
 {% endblock %}
 
 {% block body %}
+
+	{# ==========================
+		   DEMANDES D'AMITIE RECUES
+		   ========================== #}
 
 	<h1>Mes demandes d'amitié reçues</h1>
 
@@ -13,10 +18,13 @@
 
 	{% else %}
 
+		{# Parcours des demandes recues encore en attente #}
 		{% for demande in demandesRecues %}
 
-			<article class="utilisateur">
+			<article
+				class="utilisateur">
 
+				{# Accès au demandeur grace a la relation avec user #}
 				<h2>{{ demande.demandeur.pseudo }}</h2>
 
 				{% if demande.demandeur.photo %}
@@ -28,10 +36,12 @@
 					{{ demande.dateDemande|date('d/m/Y à H:i') }}
 				</p>
 
+				{# L'id de la demande permet au controleur de savoir laquelle accepter #}
 				<a class="bouton" href="{{ path('app_amis_accepter', {'id': demande.id}) }}">
 					Accepter
 				</a>
 
+				{# Meme principe pour refuser la demande #}
 				<a class="bouton bouton-danger" href="{{ path('app_amis_refuser', {'id': demande.id}) }}">
 					Refuser
 				</a>
@@ -41,6 +51,11 @@
 		{% endfor %}
 
 	{% endif %}
+
+
+	{# ==========================
+		   LISTE DES AMIS
+		   ========================== #}
 
 	<h2>Mes amis</h2>
 
@@ -52,7 +67,7 @@
 
 		{% for ami in amis %}
 
-			<article article class="utilisateur">
+			<article class="utilisateur">
 
 				<h2>{{ ami.pseudo }}</h2>
 
@@ -60,6 +75,7 @@
 					<img src="{{ asset('uploads/profils/' ~ ami.photo) }}" alt="Photo de profil" class="photo-utilisateur">
 				{% endif %}
 
+				{# La biographie est facultative #}
 				{% if ami.biographie %}
 					<p>{{ ami.biographie }}</p>
 				{% endif %}
@@ -70,13 +86,22 @@
 
 	{% endif %}
 
+
+	{# ==========================
+		   UTILISATEURS A AJOUTER
+		   ========================== #}
+
 	<h2>Utilisateurs</h2>
 
 	{% for utilisateur in utilisateurs %}
 
+		{# On retire de la liste
+				   l'utilisateur connecté,
+				   ses amis,
+				   et les utilisateurs ayant deja une demande en attente #}
 		{% if utilisateur.id != utilisateurConnecte.id
-    and utilisateur.id not in idsAmis
-    and utilisateur.id not in idsDemandesEnAttente %}
+			and utilisateur.id not in idsAmis
+			and utilisateur.id not in idsDemandesEnAttente %}
 
 			<article class="utilisateur">
 
@@ -91,12 +116,14 @@
 				{% endif %}
 
 				<p>
+					{# L'id permet d'indiquer quel utilisateur ajouter en ami #}
 					<a class="bouton" href="{{ path('app_amis_ajouter', {'id': utilisateur.id}) }}">
 						Ajouter en ami
 					</a>
 				</p>
 
 			</article>
+
 		{% endif %}
 
 	{% endfor %}

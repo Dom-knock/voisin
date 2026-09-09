@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil
+{% block title %}
+	Accueil
 {% endblock %}
 
 {% block body %}
@@ -12,16 +13,19 @@
 	<section>
 		<h2>Publications récentes</h2>
 
+		{# Message affiché si le controleur n'a envoyé aucune publication #}
 		{% if publications is empty %}
 
 			<p>Aucune publication pour le moment.</p>
 
 		{% else %}
 
+			{# Parcours de toutes les publications envoyées par le controleur #}
 			{% for publication in publications %}
 
 				<article>
 
+					{# Le pseudo permet d'accéder au profil de l'auteur #}
 					<h3>
 						<a href="{{ path('app_profil', {'id': publication.auteur.id}) }}">
 							{{ publication.auteur.pseudo }}
@@ -30,10 +34,12 @@
 
 					<p>{{ publication.texte }}</p>
 
+					{# L'image est affichée uniquement si la publication en possède une #}
 					{% if publication.image %}
 						<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de la publication" width="300">
 					{% endif %}
 
+					{# Formatage de la date pour un affichage plus lisible #}
 					<p>
 						Publié le
 						{{ publication.datePublication|date('d/m/Y à H:i') }}

@@ -1,6 +1,12 @@
 {{ form_start(form) }}
+
+{# Affiche automatiquement tous les champs définis dans PublicationType #}
 {{ form_widget(form) }}
+
+{# Le texte du bouton peut etre personnalisé par le template qui utilise ce formulaire #}
 <button>
 	{{ button_label|default('Enregistrer') }}
 </button>
+
+{# Fin du formulaire #}
 {{ form_end(form) }}

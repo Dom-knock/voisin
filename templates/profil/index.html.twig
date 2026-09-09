@@ -1,18 +1,26 @@
 {% extends 'base.html.twig' %}
 
+{# Le titre de la page utilise le pseudo de l'utilisateur affiché #}
 {% block title %}Profil de
 	{{ utilisateur.pseudo }}
 {% endblock %}
 
 {% block body %}
 
+	{# ==========================
+		   INFORMATIONS DU PROFIL
+		   ========================== #}
+
 	<section class="profil">
+
 		<h1>{{ utilisateur.pseudo }}</h1>
 
+		{# La photo est affichée uniquement si l'utilisateur en possède une #}
 		{% if utilisateur.photo %}
 			<img src="{{ asset('uploads/profils/' ~ utilisateur.photo) }}" alt="Photo de profil" class="photo-profil">
 		{% endif %}
 
+		{# La biographie est facultative #}
 		{% if utilisateur.biographie %}
 			<p>{{ utilisateur.biographie }}</p>
 		{% endif %}
@@ -22,19 +30,31 @@
 			{{ utilisateur.dateInscription|date('d/m/Y') }}
 		</p>
 
+		{# Le bouton de modification apparait uniquement
+				   sur le profil de l'utilisateur connecté #}
 		{% if app.user == utilisateur %}
+
 			<p>
 				<a class="bouton" href="{{ path('app_profil_modifier') }}">
 					Modifier mon profil
 				</a>
 			</p>
+
 		{% endif %}
+
 	</section>
+
+
+	{# ==========================
+		   LISTE DES AMIS
+		   ========================== #}
+
 	<h2>Amis</h2>
 
 	{% for ami in amis %}
 
 		<p>
+			{# L'id de l'ami permet d'accéder a son profil #}
 			<a href="{{ path('app_profil', {'id': ami.id}) }}">
 				{{ ami.pseudo }}
 			</a>
@@ -46,6 +66,11 @@
 
 	{% endfor %}
 
+
+	{# ==========================
+		   PUBLICATIONS
+		   ========================== #}
+
 	<h2>Publications</h2>
 
 	{% for publication in publications %}
@@ -54,6 +79,7 @@
 
 			<p>{{ publication.texte }}</p>
 
+			{# Affichage de l'image uniquement si elle existe #}
 			{% if publication.image %}
 				<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de publication" class="image-publication">
 			{% endif %}

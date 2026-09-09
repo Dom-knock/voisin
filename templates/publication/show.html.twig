@@ -1,20 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Publication
+{% block title %}
+	Publication
 {% endblock %}
 
 {% block body %}
 
 	<h1>Publication</h1>
 
-	<article class="publication">
+	<article
+		class="publication">
 
+		{# Affichage de l'auteur grace à la relation publication -> user #}
 		<h2>{{ publication.auteur.pseudo }}</h2>
 
 		<p>
 			{{ publication.texte }}
 		</p>
 
+		{# L'image est affichée uniquement si la publication en possède une #}
 		{% if publication.image %}
 
 			<img src="{{ asset('uploads/publications/' ~ publication.image) }}" alt="Image de publication" class="image-publication">
@@ -33,6 +37,7 @@
 			</a>
 		</p>
 
+		{# Les actions de modification et suppression sont affichées uniquement a l'auteur #}
 		{% if app.user == publication.auteur %}
 
 			<p>

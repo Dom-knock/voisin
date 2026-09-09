@@ -1,27 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!
+{% block title %}
+	Connexion
 {% endblock %}
 
 {% block body %}
-	<form method="post">
+
+	<form
+		method="post">
+
+		{# Affichage du message si la connexion échoue #}
 		{% if error %}
-			<div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+			<div class="alert alert-danger">
+				{{ error.messageKey|trans(error.messageData, 'security') }}
+			</div>
 		{% endif %}
 
+		{# Information affichée si un utilisateur est déjà connecté #}
 		{% if app.user %}
 			<div class="mb-3">
 				Vous êtes connecté en tant que
 				{{ app.user.userIdentifier }},
-				<a href="{{ logout_path() }}">Logout</a>
+
+				<a href="{{ logout_path() }}">Deconnexion</a>
 			</div>
 		{% endif %}
 
 		<h1>Connexion</h1>
+
+		{# Email utilisé comme identifiant de connexion #}
 		<label for="inputEmail">Email</label>
-		<input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-		<label for="inputPassword">Password</label>
-		<input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+		<input
+		type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+
+		{# Mot de passe envoyé au système de sécurité #}
+		<label for="inputPassword">Mot de passe</label>
+
+		<input
+		type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+
+		{# Protection CSRF du formulaire de connexion #}
 		<input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
 
 		<div>
@@ -31,8 +50,8 @@
 			</label>
 		</div>
 
-		<button type="submit">
-			Se connecter
-		</button>
+		<button type="submit">Se connecter</button>
+
 	</form>
+
 {% endblock %}
