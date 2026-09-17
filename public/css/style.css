@@ -1,0 +1,210 @@
+/* =========================
+   GENERAL
+   ========================= */
+
+body {
+    margin: 0;
+    background-color: #f4f5f6;
+    color: #333333;
+    font-family: Arial, sans-serif;
+}
+
+main {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto;
+}
+
+h1,
+h2,
+h3 {
+    color: #354f62;
+}
+
+a {
+    color: #3f657d;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   HEADER
+   ========================= */
+
+header {
+    background-color: #354f62;
+    padding: 20px 5%;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+header a {
+    color: white;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: auto;
+}
+
+
+/* =========================
+   BOUTONS
+   ========================= */
+
+.bouton {
+    display: inline-block;
+    padding: 8px 14px;
+    background-color: #3f657d;
+    color: white;
+    border: 1px solid #3f657d;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bouton:hover {
+    background-color: #354f62;
+    text-decoration: none;
+}
+
+.bouton-danger {
+    background-color: #a94442;
+    border-color: #a94442;
+}
+
+/* =========================
+   PUBLICATIONS
+   ========================= */
+
+.publication {
+    max-width: 600px;
+    margin-bottom: 25px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #d4d7da;
+}
+
+.publication h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.publication p {
+    margin: 10px 0;
+}
+
+.image-publication {
+    display: block;
+    width: 100%;
+    max-width: 560px;
+    height: 280px;
+    object-fit: cover;
+    margin: 15px 0;
+}
+
+/* =========================
+   PROFIL
+   ========================= */
+
+   .profil {
+    max-width: 600px;
+    padding: 20px;
+    margin-bottom: 30px;
+    background-color: white;
+    border: 1px solid #d4d7da;
+}
+
+.profil h1 {
+    margin-top: 0;
+}
+
+.photo-profil {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   UTILISATEURS / AMIS
+   ========================= */
+
+.utilisateur {
+    max-width: 400px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: white;
+    border: 1px solid #d4d7da;
+}
+
+.utilisateur h2,
+.utilisateur h3 {
+    margin-top: 0;
+}
+
+.photo-utilisateur {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+/* =========================
+   FORMULAIRES
+   ========================= */
+
+form {
+    max-width: 500px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #d4d7da;
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input,
+textarea,
+select {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #bfc4c8;
+    background-color: white;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button {
+    margin-top: 15px;
+    padding: 8px 14px;
+    background-color: #3f657d;
+    color: white;
+    border: 1px solid #3f657d;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #354f62;
+}
